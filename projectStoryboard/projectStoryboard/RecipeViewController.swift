@@ -28,29 +28,21 @@ class RecipeViewController: UIViewController {
         spoonRequest.setValue("spoonacular-recipe-food-nutrition-v1.p.rapidapi.com", forHTTPHeaderField: "X-RapidAPI-Host")
         let spoonTask: URLSessionDataTask = session.dataTask(with: spoonRequest)
         { [unowned self] (receivedData, response, error) -> Void in
-            print(type(of: receivedData))
-            let theString:NSString = NSString(data: receivedData!, encoding: String.Encoding.ascii.rawValue)!
-            print(theString)
-            //print(receivedData! as NSData)
+
             if let data = receivedData {
-                var jsonResponse : [String:AnyObject]?
-                
                 do {
-                    jsonResponse = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String:AnyObject]
-                    print("jsonResponse type: \(type(of: jsonResponse))")
+                    let decoder = JSONDecoder() // get a decoder
+                    // decode based on the structure [RecipeSearchService]
+                    // change RecipeSearchService as needed to shapeof response
+                    let recipeSearchService = try decoder.decode(Array<RecipeSearchService>.self, from: data)
+                    
+                    print("PRINT DATA")
+                    print(recipeSearchService)
                 }
                 catch {
-                    print("Caught exception")
+                    print("Exception on Decode: \(error)")
                 }
-                print("data")
-                print(jsonResponse)
-                
-                //print(jsonResponse?["root"]?["stations"] ?? "none")
-                //var json = jsonResponse
-                
-                
-               
-                
+     
             }
         }
         spoonTask.resume()
