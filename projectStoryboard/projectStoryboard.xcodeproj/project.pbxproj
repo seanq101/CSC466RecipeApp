@@ -20,6 +20,8 @@
 		5A3EFC982294B9D1005A2C28 /* FoodItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3EFC972294B9D1005A2C28 /* FoodItemCell.swift */; };
 		5A89289D229B2D710077BB20 /* RecipeSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A89289C229B2D710077BB20 /* RecipeSearchService.swift */; };
 		5A89289F229B2E540077BB20 /* speechInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A89289E229B2E540077BB20 /* speechInputViewController.swift */; };
+		5ABBE481229B5BDD00658196 /* RecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABBE480229B5BDD00658196 /* RecipeCell.swift */; };
+		5ABBE483229C7A1800658196 /* RecipeDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABBE482229C7A1800658196 /* RecipeDetail.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +61,8 @@
 		5A3EFC972294B9D1005A2C28 /* FoodItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItemCell.swift; sourceTree = "<group>"; };
 		5A89289C229B2D710077BB20 /* RecipeSearchService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeSearchService.swift; sourceTree = "<group>"; };
 		5A89289E229B2E540077BB20 /* speechInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = speechInputViewController.swift; sourceTree = "<group>"; };
+		5ABBE480229B5BDD00658196 /* RecipeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCell.swift; sourceTree = "<group>"; };
+		5ABBE482229C7A1800658196 /* RecipeDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetail.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,8 @@
 				5A3EFC952294B629005A2C28 /* ItemTableController.swift */,
 				5A89289C229B2D710077BB20 /* RecipeSearchService.swift */,
 				5A136EE3226FF1C800B3D46A /* Main.storyboard */,
+				5ABBE482229C7A1800658196 /* RecipeDetail.swift */,
+				5ABBE480229B5BDD00658196 /* RecipeCell.swift */,
 				5A89289E229B2E540077BB20 /* speechInputViewController.swift */,
 				5A34F2A622961DDF000CD80A /* RecipeViewController.swift */,
 				5A3EFC972294B9D1005A2C28 /* FoodItemCell.swift */,
@@ -279,7 +285,9 @@
 			files = (
 				5A136EE2226FF1C800B3D46A /* ViewController.swift in Sources */,
 				5A89289F229B2E540077BB20 /* speechInputViewController.swift in Sources */,
+				5ABBE483229C7A1800658196 /* RecipeDetail.swift in Sources */,
 				5A3EFC942294B216005A2C28 /* FoodItem.swift in Sources */,
+				5ABBE481229B5BDD00658196 /* RecipeCell.swift in Sources */,
 				5A89289D229B2D710077BB20 /* RecipeSearchService.swift in Sources */,
 				5A34F2A722961DDF000CD80A /* RecipeViewController.swift in Sources */,
 				5A3EFC982294B9D1005A2C28 /* FoodItemCell.swift in Sources */,

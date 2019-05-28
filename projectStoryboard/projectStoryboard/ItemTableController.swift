@@ -51,10 +51,9 @@ class ItemTableController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // #warning Incomplete implementation, return the number of rows
-        print(indexPath.row)
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "foodCell", for: indexPath) as? FoodItemCell
-
+        
         // Configure the cell...
         /*
          @IBOutlet weak var nameLabel: UILabel!
@@ -68,7 +67,6 @@ class ItemTableController: UITableViewController {
         cell?.expiryLabel.text = thisItem.expiry.description
         cell?.unitLabel.text = thisItem.unit
         
-        print("row num")
         
         
         return cell!
@@ -76,20 +74,16 @@ class ItemTableController: UITableViewController {
     
     
     @IBAction func sendFoodItem(_ unwindSegue: UIStoryboardSegue) {
-        print("here")
         guard let speechVC = unwindSegue.source as? speechInputViewController,
         let foodItem = speechVC.foodItem else {
                 return
         }
         ourPantry.append(foodItem)
-        print("our pantry")
-        print(ourPantry)
         //print(foodItem)
 //        let newIndexPath = IndexPath(row: ourPantry.count, section: 0)
 //        tableView.insertRows(at: [newIndexPath], with: .automatic)
         DispatchQueue.main.async{
             self.tableView.reloadData()
-            print("hi")
         }
     }
 
