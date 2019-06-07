@@ -5,7 +5,7 @@
 //  Created by Sean Quinn on 5/21/19.
 //  Copyright © 2019 Sean Quinn. All rights reserved.
 //
-
+import os.log
 import UIKit
 
 class ItemTableController: UITableViewController {
@@ -13,15 +13,19 @@ class ItemTableController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let savedFoodItems = loadFoodItems() {
+            ourPantry += savedFoodItems
+        }
 //        let properName: String
 //        let apiName: String
 //        let quantity: Int
 //        let unit: String
 //        let expiry: Date
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd"
-        let dateOne = formatter.date(from: "2019/06/01")
-        ourPantry.append(FoodItem(properName: "Wheat Bread", apiName: "bread", quantity: 2, unit: "slices", expiry: dateOne! ))
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "yyyy/MM/dd"
+//        let dateOne = formatter.date(from: "2019/06/01")
+//        ourPantry.append(FoodItem(properName: "Wheat Bread", apiName: "bread", quantity: 2, unit: "slices", expiry: dateOne! ))
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -84,6 +88,7 @@ class ItemTableController: UITableViewController {
         DispatchQueue.main.async{
             self.tableView.reloadData()
         }
+        saveFoodItems()
     }
 
     // Override to support conditional editing of the table view.
@@ -98,11 +103,25 @@ class ItemTableController: UITableViewController {
             // Delete the row from the data source
             self.ourPantry.remove(at: indexPath.item)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            saveFoodItems()
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
     }
 
+    private func saveFoodItems() {
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(ourPantry, toFile: FoodItem.ArchiveURL.path)
+        if isSuccessfulSave {
+            os_log("Recipes successfully saved.", log: OSLog.default, type: .debug)
+        } else {
+            os_log("Failed to save recipes...", log: OSLog.default, type: .error)
+        }
+    }
+    
+    private func loadFoodItems() -> [FoodItem]?  {
+        return NSKeyedUnarchiver.unarchiveObject(withFile: FoodItem.ArchiveURL.path) as? [FoodItem]
+    }
+    
     /*
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
