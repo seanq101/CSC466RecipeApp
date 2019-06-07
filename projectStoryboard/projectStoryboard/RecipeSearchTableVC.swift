@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class RecipeSearchTableVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let spoonacularURL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients?number=5&ranking=1&ignorePantry=false&ingredients=apples%2Cpeanut+butter"
 
@@ -18,11 +18,32 @@ class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var pantry: [FoodItem]? = []
     var recipeSearchService: Array<RecipeSearchService> = []
     
+    var passedDiet: String = ""
+    var passedCourse: String = ""
+    var passedCuisine: String = ""
+    var passedInstruction: String = ""
+    var passedDishName: String = ""
+    
+
+    
     override func viewDidLoad() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         super.viewDidLoad()
         
+        var spoonacularURL2 = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?"
+        print("Length of string")
+        print(spoonacularURL2.count) //diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C+gluten&number=10&offset=0&type=main+course&instructionsRequired=true&query=burger
+        if passedCuisine != "N/A"{
+            spoonacularURL2 = spoonacularURL2 + "cuisine=" + passedCuisine
+        }
+        if passedDiet != "N/A"{
+            spoonacularURL2 = spoonacularURL2 + "diet=" + passedDiet
+        }
+        if passedCourse != "N/A"{
+            passedCourse = passedCourse.replacingOccurrences(of: " ", with: "+")
+            spoonacularURL2 = spoonacularURL2 + "&type=" + passedCourse
+        }
         let session = URLSession(configuration: URLSessionConfiguration.default)
         
         
@@ -46,7 +67,7 @@ class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 catch {
                     print("Exception on Decode: \(error)")
                 }
-     
+                
             }
             self.recipeSearchService =  self.recipeSearchService.sorted(by: { $0.missedIngredientCount < $1.missedIngredientCount })
             DispatchQueue.main.async{
@@ -61,7 +82,7 @@ class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     
     /*
- 
+     
      override func numberOfSections(in tableView: UITableView) -> Int {
      // #warning Incomplete implementation, return the number of sections
      
@@ -72,7 +93,7 @@ class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDa
      return self.ourPantry.count
      
      }
-    */
+     */
     func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         
