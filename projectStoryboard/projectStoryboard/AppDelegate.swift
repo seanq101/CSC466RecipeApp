@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  projectStoryboard
 //
-//  Created by Sean Quinn on 4/23/19.
+//  Copyright © 2019 Andrew Puleo. All rights reserved.
 //  Copyright © 2019 Sean Quinn. All rights reserved.
 //
 

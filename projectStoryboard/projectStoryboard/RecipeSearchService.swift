@@ -2,7 +2,7 @@
 //  RecipeSearchService.swift
 //  projectStoryboard
 //
-//  Created by Andrew Puleo on 5/23/19.
+//  Copyright © 2019 Sean Quinn. All rights reserved.
 //  Copyright © 2019 Sean Quinn. All rights reserved.
 //
 
