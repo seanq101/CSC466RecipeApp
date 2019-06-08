@@ -91,6 +91,23 @@ class ItemTableController: UITableViewController {
         saveFoodItems()
     }
 
+    @IBAction func sendFoodItemFromBarcode(_ unwindSegue: UIStoryboardSegue) {
+        guard let barcodeVC = unwindSegue.source as? BarcodeVC,
+            let foodItem = barcodeVC.foodItem else {
+                print("return early")
+                return
+        }
+        print(foodItem)
+        ourPantry.append(foodItem)
+        //print(foodItem)
+        //        let newIndexPath = IndexPath(row: ourPantry.count, section: 0)
+        //        tableView.insertRows(at: [newIndexPath], with: .automatic)
+        DispatchQueue.main.async{
+            self.tableView.reloadData()
+        }
+        saveFoodItems()
+    }
+    
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.

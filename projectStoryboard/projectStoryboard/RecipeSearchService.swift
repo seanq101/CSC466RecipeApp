@@ -77,6 +77,10 @@ struct RecipeSearchService : Codable {
     }
 }
 
+struct UpcSearchService : Codable {
+    let title : String
+}
+
 //"id":48191
 //"title":"Apple Crumble Recipe"
 //"image":"https://spoonacular.com/recipeImages/48191-312x231.jpg"
