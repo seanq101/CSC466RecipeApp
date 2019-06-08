@@ -77,6 +77,23 @@ struct RecipeSearchService : Codable {
     }
 }
 
+
+
+struct InstructionSearchService : Codable {
+    let id : Int
+    let title : String
+    let instructions : String
+    
+    // Make this more in depth by adding another struct
+//    struct Ingredient : Codable {
+//        let id : Int
+//        let amount : Float
+//        let unitLong : String
+//        let originalName : String
+//        let image : String
+//    }
+}
+
 //"id":48191
 //"title":"Apple Crumble Recipe"
 //"image":"https://spoonacular.com/recipeImages/48191-312x231.jpg"

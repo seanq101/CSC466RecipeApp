@@ -13,9 +13,14 @@ class RecipeDetail: UIViewController{
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var lngredientsLabel: UILabel!
     @IBOutlet weak var likesLabel: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var directionsLabel: UILabel!
     
     var passedRecipe: RecipeSearchService?
+    let spoonacularURL1 = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/"
+    let spoonacularURL2 = "/information?includeNutrition=false"
     
+    var instructionSearchService: InstructionSearchService?
     override func viewDidLoad() {
         
         let recipePicURL = URL(string: (self.passedRecipe?.image)!)!
@@ -49,7 +54,47 @@ class RecipeDetail: UIViewController{
             }
         }
         downloadPicTask.resume()
-
+        let amount:Int? = passedRecipe?.id
+        var spoonacularFinishedURL = ""
+        if let tempId = amount{
+            spoonacularFinishedURL = spoonacularURL1 + String(tempId) + spoonacularURL2
+        }
+        var spoonRequest = URLRequest(url: URL(string: spoonacularFinishedURL)!)
+        spoonRequest.setValue("282dc9c01amsh58247426577f9a7p1776a9jsn132cf0e412e0", forHTTPHeaderField: "X-RapidAPI-Key")
+        //X-RapidAPI-Host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+        spoonRequest.setValue("spoonacular-recipe-food-nutrition-v1.p.rapidapi.com", forHTTPHeaderField: "X-RapidAPI-Host")
+        
+        let spoonTask: URLSessionDataTask = session.dataTask(with: spoonRequest)
+        { [unowned self] (receivedData, response, error) -> Void in
+            if let data = receivedData {
+                do {
+                    print("data was: ", data)
+                    let decoder = JSONDecoder() // get a decoder
+                    // decode based on the structure [RecipeSearchService]
+                    // change RecipeSearchService as needed to shapeof response
+                    self.instructionSearchService = try decoder.decode(InstructionSearchService.self, from: data)
+                    
+                    print("PRINT DATA")
+                    print(self.instructionSearchService)
+                    print(type(of: self.instructionSearchService))
+                    
+                }
+                catch {
+                    print("Exception on Decode: \(error)")
+                }
+                
+            }
+            DispatchQueue.main.async{
+                if let instructions = self.instructionSearchService?.instructions{
+                    self.directionsLabel.text = self.directionsLabel.text! + instructions
+                }
+                
+            }
+        }
+        
+        spoonTask.resume()
+        
+        
         
         self.nameLabel.text = passedRecipe?.title
         let likes = String(describing: (passedRecipe?.likes)!)
@@ -70,7 +115,11 @@ class RecipeDetail: UIViewController{
             count += 1
             //print(type(of: ingredient["originalName"]))
         }
+        
         /*
+         
+         InstructionSearchService
+         
          struct Ingredient : Codable {
          let id : Int
          let amount : Float
