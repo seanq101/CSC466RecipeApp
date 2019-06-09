@@ -30,7 +30,6 @@ class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDa
         spoonRequest.setValue("282dc9c01amsh58247426577f9a7p1776a9jsn132cf0e412e0", forHTTPHeaderField: "X-RapidAPI-Key")
         //X-RapidAPI-Host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
         spoonRequest.setValue("spoonacular-recipe-food-nutrition-v1.p.rapidapi.com", forHTTPHeaderField: "X-RapidAPI-Host")
-        spoonRequest.httpBody()
         let spoonTask: URLSessionDataTask = session.dataTask(with: spoonRequest)
         { [unowned self] (receivedData, response, error) -> Void in
             if let data = receivedData {

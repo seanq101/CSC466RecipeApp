@@ -106,7 +106,7 @@ class BarcodeVC: UIViewController {
         if let foodName = title {
             let alertPrompt = UIAlertController(title: "Add to pantry", message: "You're going add \(foodName) to your pantry", preferredStyle: .actionSheet)
             let confirmAction = UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default, handler: {
-                    (action) -> Void in
+                (action) -> Void in
                 
                 let currentDate = Date()
                 var dateComponent = DateComponents()
@@ -172,15 +172,15 @@ extension BarcodeVC: AVCaptureMetadataOutputObjectsDelegate {
                             
                             print("PRINT DATA")
                             print(self.upcSearchService)
-//                            print(type(of: self.recipeSearchService))
+                            //                            print(type(of: self.recipeSearchService))
                         }
                         catch {
                             print("Exception on Decode: \(error)")
                         }
                         
                     }
-//                    DispatchQueue.main.async{
-//                    }
+                    //                    DispatchQueue.main.async{
+                    //                    }
                 }
                 
                 spoonTask.resume()
