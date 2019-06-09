@@ -1,33 +1,34 @@
 //
-//  RecipeDetail.swift
+//  CustomRecipeSearchDetail.swift
 //  projectStoryboard
 //
-//  Copyright © 2019 Andrew Puleo. All rights reserved.
+//  Created by Sean Quinn on 6/9/19.
 //  Copyright © 2019 Sean Quinn. All rights reserved.
 //
 
 import UIKit
 
-class RecipeDetail: UIViewController{
+class CustomRecipeSearchDetail: UIViewController {
+    
     @IBOutlet weak var recipeImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var lngredientsLabel: UILabel!
-    @IBOutlet weak var likesLabel: UILabel!
-    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var directionsLabel: UILabel!
     
-    var passedRecipe: RecipeSearchService?
+    
+    
+    
     let spoonacularURL1 = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/"
     let spoonacularURL2 = "/information?includeNutrition=false"
     
     var instructionSearchService: InstructionSearchService?
+    var passedRecipe: ComplexRecipeSearchService.ComplexRecipe?
+    
     override func viewDidLoad() {
-        
-        let recipePicURL = URL(string: (self.passedRecipe?.image)!)!
-        // You can read more about it here https://developer.apple.com/reference/foundation/urlsessionconfiguration
+        super.viewDidLoad()
         let session = URLSession(configuration: .default)
         
-        // Define a download task. The download task will download the contents of the URL as a Data object and then you can do what you wish with that data.
+        let recipePicURL = URL(string: (self.passedRecipe?.image)!)!
+        
         let downloadPicTask = session.dataTask(with: recipePicURL) { (data, response, error) in
             // The download has finished.
             if let e = error {
@@ -54,6 +55,8 @@ class RecipeDetail: UIViewController{
             }
         }
         downloadPicTask.resume()
+        
+        
         
         let amount:Int? = passedRecipe?.id
         var spoonacularFinishedURL = ""
@@ -95,40 +98,21 @@ class RecipeDetail: UIViewController{
         
         spoonTask.resume()
         
-        
-        
         self.nameLabel.text = passedRecipe?.title
-        let likes = String(describing: (passedRecipe?.likes)!)
-        self.likesLabel.text = self.likesLabel.text! + " " + likes
-        //self.lngredientsLabel.text = passedRecipe.
-//        print(type(of: self.passedRecipe?.missedIngredients))
-//        print(self.passedRecipe?.missedIngredients)
-        let missedArray = self.passedRecipe?.missedIngredients as! Array<Any>
-        var count = 0
-        for ingredient in missedArray{
-            let theIngredient = ingredient as! RecipeSearchService.Ingredient
-            print(theIngredient.originalName)
-            if count != 0 {
-                self.lngredientsLabel.text = self.lngredientsLabel.text! + ", " + theIngredient.originalName
-            }else{
-                self.lngredientsLabel.text = self.lngredientsLabel.text! + " " + theIngredient.originalName
-            }
-            count += 1
-            //print(type(of: ingredient["originalName"]))
-        }
         
-        /*
-         
-         InstructionSearchService
-         
-         struct Ingredient : Codable {
-         let id : Int
-         let amount : Float
-         let unitLong : String
-         let originalName : String
-         let image : String
-         }
-         */
+
+        // Do any additional setup after loading the view.
     }
     
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
 }

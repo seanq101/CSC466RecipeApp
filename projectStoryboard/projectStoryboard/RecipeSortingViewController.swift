@@ -15,7 +15,6 @@ class RecipeSortingViewController: UIViewController, UIPickerViewDataSource, UIP
     @IBOutlet weak var cuisinePicker: UIPickerView!
     @IBOutlet weak var coursePicker: UIPickerView!
     @IBOutlet weak var dietPicker: UIPickerView!
-    @IBOutlet weak var instructionSwitch: UISwitch!
     
     var cuisines = [String]()
     var courses = [String]()
@@ -50,6 +49,7 @@ class RecipeSortingViewController: UIViewController, UIPickerViewDataSource, UIP
             return self.diets[row]
         }
     }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,27 +67,38 @@ class RecipeSortingViewController: UIViewController, UIPickerViewDataSource, UIP
         dietPicker.dataSource = self
         dietPicker.delegate = self
         
-    
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        let dishName = dishNameField.text
         let chosenCuisine = cuisines[cuisinePicker.selectedRow(inComponent: 0)]
         print(chosenCuisine)
         let chosenCourse = courses[coursePicker.selectedRow(inComponent: 0)]
         print(chosenCourse)
         let chosenDiet = diets[dietPicker.selectedRow(inComponent: 0)]
         print(chosenDiet)
-        //
-        let includeInstructions = instructionSwitch.isOn
-        print(includeInstructions)
+        
         if segue.identifier == "sendToCustomRecipe" {
-            let destVC = segue.destination as? RecipeDetail
+            let destVC = segue.destination as? RecipeSearchTableVC
             //let selectedIndexPath = tableView.indexPathForSelectedRow
-            destVC?.passedRecipe = nil//self.recipeSearchService[(selectedIndexPath?.row)!]
+            destVC?.passedDishName = dishName
+            destVC?.passedCuisine = chosenCuisine
+            destVC?.passedCourse = chosenCourse
+            destVC?.passedDiet = chosenDiet
         }
 
         
     }
+    
+    @IBAction func unwindFromRecipeSort(_ unwindSegue: UIStoryboardSegue) {
+       
+    }
+    
+    
+    
 }

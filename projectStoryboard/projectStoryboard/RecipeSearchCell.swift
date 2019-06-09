@@ -11,5 +11,5 @@ import UIKit
 class RecipeSearchCell: UITableViewCell {
     
     @IBOutlet weak var recipeNameLabel: UILabel!
-    @IBOutlet weak var readyInMunitesLabel: UILabel!
+    
 }

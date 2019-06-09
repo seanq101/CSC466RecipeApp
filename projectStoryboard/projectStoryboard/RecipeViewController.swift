@@ -10,7 +10,7 @@ import UIKit
 
 class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let spoonacularURL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients?number=5&ranking=1&ignorePantry=false&ingredients=apples%2Cpeanut+butter"
+    let spoonacularURL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients?number=20&ranking=1&ignorePantry=false&ingredients=apples%2Cpeanut+butter"
 
     //To add any other ingredients to the list, use the format %2C[name] to end of the query
     
@@ -30,6 +30,7 @@ class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDa
         spoonRequest.setValue("282dc9c01amsh58247426577f9a7p1776a9jsn132cf0e412e0", forHTTPHeaderField: "X-RapidAPI-Key")
         //X-RapidAPI-Host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
         spoonRequest.setValue("spoonacular-recipe-food-nutrition-v1.p.rapidapi.com", forHTTPHeaderField: "X-RapidAPI-Host")
+        spoonRequest.httpBody()
         let spoonTask: URLSessionDataTask = session.dataTask(with: spoonRequest)
         { [unowned self] (receivedData, response, error) -> Void in
             if let data = receivedData {
@@ -129,12 +130,7 @@ class RecipeViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    
-    @IBAction func unwindFromRecipeSort(_ unwindSegue: UIStoryboardSegue) {
-        DispatchQueue.main.async{
-            self.tableView.reloadData()
-        }
-    }
+
     
     
     

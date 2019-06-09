@@ -9,67 +9,90 @@
 import UIKit
 
 class RecipeSearchTableVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    let spoonacularURL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients?number=5&ranking=1&ignorePantry=false&ingredients=apples%2Cpeanut+butter"
-
-    //To add any other ingredients to the list, use the format %2C[name] to end of the query
+    var complexRecipeSearchService : ComplexRecipeSearchService? = nil
+    //
     
     @IBOutlet weak var tableView: UITableView!
-    var pantry: [FoodItem]? = []
-    var recipeSearchService: Array<RecipeSearchService> = []
     
-    var passedDiet: String = ""
-    var passedCourse: String = ""
-    var passedCuisine: String = ""
-    var passedInstruction: String = ""
-    var passedDishName: String = ""
-    
-
+    var passedDishName: String?
+    var passedCuisine: String?
+    var passedCourse: String?
+    var passedDiet: String?
     
     override func viewDidLoad() {
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
         super.viewDidLoad()
         
-        var spoonacularURL2 = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search?"
-        print("Length of string")
-        print(spoonacularURL2.count) //diet=vegetarian&excludeIngredients=coconut&intolerances=egg%2C+gluten&number=10&offset=0&type=main+course&instructionsRequired=true&query=burger
-        if passedCuisine != "N/A"{
-            spoonacularURL2 = spoonacularURL2 + "cuisine=" + passedCuisine
-        }
-        if passedDiet != "N/A"{
-            spoonacularURL2 = spoonacularURL2 + "diet=" + passedDiet
-        }
-        if passedCourse != "N/A"{
-            passedCourse = passedCourse.replacingOccurrences(of: " ", with: "+")
-            spoonacularURL2 = spoonacularURL2 + "&type=" + passedCourse
-        }
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        
         let session = URLSession(configuration: URLSessionConfiguration.default)
         
+        //unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/searchComplex?query=burger&cuisine=american&diet=vegan&type=main+course&ranking=2&limitLicense=false&offset=0&number=10")
+
         
+        let spoonURL1 = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/searchComplex?"
+        
+        let querySection = "query=" + passedDishName!
+        print("querySection: ",querySection)
+        var cuisineSection: String = ""
+        
+        if let cuisineChoice = passedCuisine {
+            if cuisineChoice != "N/A"{
+                cuisineSection = "&cuisine=" + cuisineChoice
+            }
+        }
+        print("cuisineSection: ", cuisineSection)
+        var dietSection: String = ""
+        if let dietChoice = passedDiet{
+            if dietChoice != "N/A"{
+                dietSection = "&diet=" + dietChoice
+            }
+        }
+        print("dietSection: ", dietSection)
+        var courseSection: String = ""
+        if let courseChoice = passedCourse{
+            if courseChoice != "N/A"{
+                let choiceList = courseChoice.split(separator: " ")
+                
+                courseSection = "&type="
+                for sec in choiceList{
+                    courseSection += sec + "+"
+                }
+                courseSection = String(courseSection.dropLast())
+            }
+        }
+        print("courseSection: ",courseSection)
+        let spoonURL2 = "&instructionsRequired=true&ranking=2&limitLicense=false&offset=0&number=10"
+        let spoonacularURL = spoonURL1+querySection+cuisineSection+dietSection+courseSection+spoonURL2
+        print(spoonacularURL)
         var spoonRequest = URLRequest(url: URL(string: spoonacularURL)!)
+        
         spoonRequest.setValue("282dc9c01amsh58247426577f9a7p1776a9jsn132cf0e412e0", forHTTPHeaderField: "X-RapidAPI-Key")
         //X-RapidAPI-Host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
         spoonRequest.setValue("spoonacular-recipe-food-nutrition-v1.p.rapidapi.com", forHTTPHeaderField: "X-RapidAPI-Host")
+        
+        
+        
         let spoonTask: URLSessionDataTask = session.dataTask(with: spoonRequest)
         { [unowned self] (receivedData, response, error) -> Void in
             if let data = receivedData {
                 do {
                     let decoder = JSONDecoder() // get a decoder
+                    
                     // decode based on the structure [RecipeSearchService]
                     // change RecipeSearchService as needed to shapeof response
-                    self.recipeSearchService = try decoder.decode(Array<RecipeSearchService>.self, from: data)
+                    self.complexRecipeSearchService = try decoder.decode(ComplexRecipeSearchService.self, from: data)
                     
                     print("PRINT DATA")
-                    print(self.recipeSearchService)
-                    print(type(of: self.recipeSearchService))
+                    print(self.complexRecipeSearchService?.results)
+                    print(type(of: self.complexRecipeSearchService))
                 }
                 catch {
                     print("Exception on Decode: \(error)")
                 }
                 
             }
-            self.recipeSearchService =  self.recipeSearchService.sorted(by: { $0.missedIngredientCount < $1.missedIngredientCount })
+//            self.complexRecipeSearchService =  self.complexRecipeSearchService.sorted(by: { $0.missedIngredientCount < $1.missedIngredientCount })
             DispatchQueue.main.async{
                 self.tableView.reloadData()
             }
@@ -77,23 +100,11 @@ class RecipeSearchTableVC: UIViewController, UITableViewDelegate, UITableViewDat
         
         spoonTask.resume()
         
+        
     }
     
     
     
-    /*
-     
-     override func numberOfSections(in tableView: UITableView) -> Int {
-     // #warning Incomplete implementation, return the number of sections
-     
-     return 1
-     }
-     
-     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-     return self.ourPantry.count
-     
-     }
-     */
     func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         
@@ -102,12 +113,17 @@ class RecipeSearchTableVC: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("count here")
-        print(self.recipeSearchService.count)
-        return  self.recipeSearchService.count// your number of cell here
+        print(complexRecipeSearchService?.results.count)
+        if let complex = complexRecipeSearchService{
+            return complex.results.count
+        }else{
+            return 0
+        }
+        //return  self.complexRecipeSearchService?.results.count ?? 0// your number of cell here
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as? RecipeCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "recipeSearchCell", for: indexPath) as? RecipeSearchCell
         
         // Configure the cell...
         /*
@@ -116,42 +132,30 @@ class RecipeSearchTableVC: UIViewController, UITableViewDelegate, UITableViewDat
          @IBOutlet weak var expiryLabel: UILabel!
          @IBOutlet weak var unitLabel: UILabel!
          */
-        let thisItem = self.recipeSearchService[indexPath.row]
-        cell?.recipeName?.text = thisItem.title
-        cell?.missingLabel?.text = String(thisItem.missedIngredientCount)
+        let thisItem = self.complexRecipeSearchService?.results[indexPath.row]
+        cell?.recipeNameLabel?.text = thisItem!.title
+        //cell?.missingLabel?.text = String(thisItem!.missedIngredientCount)
         
         //cell?.recipeImage.image = [UIImage imageWithContentsOfURL:thisItem.image]
         print("title api")
-        print(thisItem.title)
+        print(thisItem!.title)
         
         return cell!
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // cell selected code here
-    }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         
-        if segue.identifier == "showSelectedRecipe" {
-            let destVC = segue.destination as? RecipeDetail
+        if segue.identifier == "showCustomRecipeDetail" {
+            let destVC = segue.destination as? CustomRecipeSearchDetail
             let selectedIndexPath = tableView.indexPathForSelectedRow
-            destVC?.passedRecipe = self.recipeSearchService[(selectedIndexPath?.row)!]
+            destVC?.passedRecipe = self.complexRecipeSearchService?.results[(selectedIndexPath?.row)!]
         }
         
     }
     
-    @IBAction func unwindFromRecipeDetail(_ unwindSegue: UIStoryboardSegue) {
-        DispatchQueue.main.async{
-            self.tableView.reloadData()
-        }
-    }
-    
-    
-    @IBAction func unwindFromRecipeSort(_ unwindSegue: UIStoryboardSegue) {
+    @IBAction func unwindFromCustomRecipeSearchDetail(_ unwindSegue: UIStoryboardSegue) {
         DispatchQueue.main.async{
             self.tableView.reloadData()
         }

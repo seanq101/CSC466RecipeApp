@@ -94,6 +94,20 @@ struct InstructionSearchService : Codable {
 //    }
 }
 
+struct ComplexRecipeSearchService : Codable{
+    let results : [ComplexRecipe]
+    struct ComplexRecipe : Codable{
+        let id : Int
+//        let usedIngredientCount : Int
+//        let missedIngredientCount : Int
+//        let likes : Int
+        let title : String
+        let image : String
+        let imageType : String
+    }
+    
+}
+
 //"id":48191
 //"title":"Apple Crumble Recipe"
 //"image":"https://spoonacular.com/recipeImages/48191-312x231.jpg"
