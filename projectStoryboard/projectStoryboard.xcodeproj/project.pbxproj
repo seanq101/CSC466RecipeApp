@@ -26,7 +26,7 @@
 		5ACFB0A922A9A9D300D9874A /* RecipeSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACFB0A822A9A9D300D9874A /* RecipeSearchCell.swift */; };
 		5ACFB0AB22A9AD2C00D9874A /* RecipeSearchTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACFB0AA22A9AD2C00D9874A /* RecipeSearchTableVC.swift */; };
 		5ACFB0AD22AD8D0C00D9874A /* CustomRecipeSearchDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACFB0AC22AD8D0C00D9874A /* CustomRecipeSearchDetail.swift */; };
-		999686BD229DD254006E3A43 /* BarcodeInputVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 999686BC229DD254006E3A43 /* BarcodeInputVC.swift */; };
+
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,7 +72,8 @@
 		5ACFB0A822A9A9D300D9874A /* RecipeSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeSearchCell.swift; sourceTree = "<group>"; };
 		5ACFB0AA22A9AD2C00D9874A /* RecipeSearchTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeSearchTableVC.swift; sourceTree = "<group>"; };
 		5ACFB0AC22AD8D0C00D9874A /* CustomRecipeSearchDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRecipeSearchDetail.swift; sourceTree = "<group>"; };
-		999686BC229DD254006E3A43 /* BarcodeInputVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeInputVC.swift; sourceTree = "<group>"; };
+		99476FAF22AC417A00A4DDFC /* BarcodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeVC.swift; sourceTree = "<group>"; };
+
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +142,7 @@
 				5A136EE6226FF1C800B3D46A /* Assets.xcassets */,
 				5A136EE8226FF1C800B3D46A /* LaunchScreen.storyboard */,
 				5A136EEB226FF1C800B3D46A /* Info.plist */,
-				999686BC229DD254006E3A43 /* BarcodeInputVC.swift */,
+				99476FAF22AC417A00A4DDFC /* BarcodeVC.swift */,
 			);
 			path = projectStoryboard;
 			sourceTree = "<group>";
@@ -305,11 +306,11 @@
 				5ACFB0A922A9A9D300D9874A /* RecipeSearchCell.swift in Sources */,
 				5ABBE481229B5BDD00658196 /* RecipeCell.swift in Sources */,
 				5A89289D229B2D710077BB20 /* RecipeSearchService.swift in Sources */,
+				99476FB022AC417A00A4DDFC /* BarcodeVC.swift in Sources */,
 				5ACFB0AB22A9AD2C00D9874A /* RecipeSearchTableVC.swift in Sources */,
 				5ACFB0AD22AD8D0C00D9874A /* CustomRecipeSearchDetail.swift in Sources */,
 				5A34F2A722961DDF000CD80A /* RecipeViewController.swift in Sources */,
 				5A3EFC982294B9D1005A2C28 /* FoodItemCell.swift in Sources */,
-				999686BD229DD254006E3A43 /* BarcodeInputVC.swift in Sources */,
 				5A136EE0226FF1C800B3D46A /* AppDelegate.swift in Sources */,
 				5A3EFC962294B629005A2C28 /* ItemTableController.swift in Sources */,
 				5ACFB0A722A5948700D9874A /* RecipeSortingViewController.swift in Sources */,

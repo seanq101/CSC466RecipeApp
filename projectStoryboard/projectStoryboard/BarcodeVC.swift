@@ -1,25 +1,38 @@
 //
-//  BarcodeInputViewController.swift
+//  BarcodeVC.swift
 //  projectStoryboard
 //
-//  Created by Andrew Puleo on 5/28/19.
+//  Created by Andrew Puleo on 6/8/19.
 //  Copyright © 2019 Sean Quinn. All rights reserved.
 //
 
 import UIKit
 import AVFoundation
 
-class QRScannerController: UIViewController {
+class BarcodeVC: UIViewController {
     
+    var foodItem: FoodItem?
+    var upcSearchService: UpcSearchService?
     @IBOutlet weak var messageLabel: UILabel!
-    @IBOutlet var topbar: UIView!
     
     var captureSession = AVCaptureSession()
     
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var qrCodeFrameView: UIView?
     
-    private let supportedCodeTypes = [AVMetadataObject.ObjectType.upce]
+    private let supportedCodeTypes = [AVMetadataObject.ObjectType.upce,
+                                      AVMetadataObject.ObjectType.code39,
+                                      AVMetadataObject.ObjectType.code39Mod43,
+                                      AVMetadataObject.ObjectType.code93,
+                                      AVMetadataObject.ObjectType.code128,
+                                      AVMetadataObject.ObjectType.ean8,
+                                      AVMetadataObject.ObjectType.ean13,
+                                      AVMetadataObject.ObjectType.aztec,
+                                      AVMetadataObject.ObjectType.pdf417,
+                                      AVMetadataObject.ObjectType.itf14,
+                                      AVMetadataObject.ObjectType.dataMatrix,
+                                      AVMetadataObject.ObjectType.interleaved2of5,
+                                      AVMetadataObject.ObjectType.qr]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +78,6 @@ class QRScannerController: UIViewController {
         
         // Move the message label and top bar to the front
         view.bringSubview(toFront: messageLabel)
-        //view.bringSubview(toFront: topbar)
         
         // Initialize QR Code Frame to highlight the QR code
         qrCodeFrameView = UIView()
@@ -85,35 +97,46 @@ class QRScannerController: UIViewController {
     
     // MARK: - Helper methods
     
-    func launchApp(decodedURL: String) {
+    func launchApp(title: String?) {
         
         if presentedViewController != nil {
             return
         }
         
-        let alertPrompt = UIAlertController(title: "Add Item", message: "You're going to add \(decodedURL)", preferredStyle: .actionSheet)
-        let confirmAction = UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default, handler: { (action) -> Void in
+        if let foodName = title {
+            let alertPrompt = UIAlertController(title: "Add to pantry", message: "You're going add \(foodName) to your pantry", preferredStyle: .actionSheet)
+            let confirmAction = UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default, handler: {
+                    (action) -> Void in
+                
+                let currentDate = Date()
+                var dateComponent = DateComponents()
+                
+                dateComponent.day = 14
+                
+                let futureDate = Calendar.current.date(byAdding: dateComponent, to: currentDate)
+                
+                self.foodItem = FoodItem.init(properName: self.upcSearchService!.title, apiName: "", quantity: 1, unit: "pinch", expiry: futureDate!)
+                self.performSegue(withIdentifier: "sendFoodItemFromBarcode", sender: self)
+            })
             
-            // add to item table
-        })
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil)
-        
-        alertPrompt.addAction(confirmAction)
-        alertPrompt.addAction(cancelAction)
-        
-        present(alertPrompt, animated: true, completion: nil)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil)
+            
+            alertPrompt.addAction(confirmAction)
+            alertPrompt.addAction(cancelAction)
+            
+            present(alertPrompt, animated: true, completion: nil)
+        }
     }
     
 }
 
-extension QRScannerController: AVCaptureMetadataOutputObjectsDelegate {
+extension BarcodeVC: AVCaptureMetadataOutputObjectsDelegate {
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         // Check if the metadataObjects array is not nil and it contains at least one object.
         if metadataObjects.count == 0 {
             qrCodeFrameView?.frame = CGRect.zero
-            messageLabel.text = "No Barcode detected"
+            messageLabel.text = "No BARCODE code is detected"
             return
         }
         
@@ -126,8 +149,46 @@ extension QRScannerController: AVCaptureMetadataOutputObjectsDelegate {
             qrCodeFrameView?.frame = barCodeObject!.bounds
             
             if metadataObj.stringValue != nil {
-//                launchApp(decodedURL: metadataObj.stringValue!)
-                messageLabel.text = metadataObj.stringValue
+                var spoonacularUpcUrl = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/products/upc/" + metadataObj.stringValue!.dropFirst()
+                
+                print("PATH")
+                print(spoonacularUpcUrl)
+                
+                let session = URLSession(configuration: URLSessionConfiguration.default)
+                
+                
+                var spoonRequest = URLRequest(url: URL(string: spoonacularUpcUrl)!)
+                spoonRequest.setValue("282dc9c01amsh58247426577f9a7p1776a9jsn132cf0e412e0", forHTTPHeaderField: "X-RapidAPI-Key")
+                //X-RapidAPI-Host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+                spoonRequest.setValue("spoonacular-recipe-food-nutrition-v1.p.rapidapi.com", forHTTPHeaderField: "X-RapidAPI-Host")
+                let spoonTask: URLSessionDataTask = session.dataTask(with: spoonRequest)
+                { [unowned self] (receivedData, response, error) -> Void in
+                    if let data = receivedData {
+                        do {
+                            let decoder = JSONDecoder() // get a decoder
+                            // decode based on the structure [RecipeSearchService]
+                            // change RecipeSearchService as needed to shapeof response
+                            self.upcSearchService = try decoder.decode(UpcSearchService.self, from: data)
+                            
+                            print("PRINT DATA")
+                            print(self.upcSearchService)
+//                            print(type(of: self.recipeSearchService))
+                        }
+                        catch {
+                            print("Exception on Decode: \(error)")
+                        }
+                        
+                    }
+//                    DispatchQueue.main.async{
+//                    }
+                }
+                
+                spoonTask.resume()
+                print("HERE I AM")
+                print(upcSearchService)
+                
+                launchApp(title: upcSearchService?.title)
+                messageLabel.text = upcSearchService?.title
             }
         }
     }

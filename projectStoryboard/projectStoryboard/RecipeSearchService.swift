@@ -77,7 +77,9 @@ struct RecipeSearchService : Codable {
     }
 }
 
-
+struct UpcSearchService : Codable {
+    let title : String
+}
 
 struct InstructionSearchService : Codable {
     let id : Int
