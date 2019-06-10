@@ -158,10 +158,30 @@ class ItemTableController: UITableViewController {
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
+    
     */
 
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "editFoodItemCell" {
+            let destVC = segue.destination as? EditFoodItemDetail
+            let selectedIndexPath = tableView.indexPathForSelectedRow
+            destVC?.passedFoodItem = self.ourPantry[(selectedIndexPath?.row)!]
+        }
+    }
+    
+    @IBAction func unwindCancelFromEditFoodItem(_ unwindSegue: UIStoryboardSegue) {
+        DispatchQueue.main.async{
+            self.tableView.reloadData()
+        }
+    }
+    
+    @IBAction func unwindSaveFromEditFoodItem(_ unwindSegue: UIStoryboardSegue) {
+        saveFoodItems()
+        DispatchQueue.main.async{
+            self.tableView.reloadData()
+        }
+    }
+    
+    
 }
